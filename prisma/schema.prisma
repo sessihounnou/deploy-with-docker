@@ -1,0 +1,72 @@
+datasource db {
+  provider = "mongodb"
+  // url      = "mongodb+srv://iot:EpitechTest12@iotapidb.wurpm1z.mongodb.net/iotApiDB"
+  url      = "mongodb+srv://agireau:EpitechTest12@agireaudb.4bxn4rj.mongodb.net/agireau"
+}
+
+// generator erd {
+//   provider = "prisma-erd-generator"
+//   output   = "./generated_diagram/prisma-erd-generator"
+// }
+
+generator client {
+  provider        = "prisma-client-js"
+  // output          = "./generated/prisma-client-js"
+  previewFeatures = ["mongodb"]
+}
+
+model User {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  email           String    @unique
+  password        String
+  phoneNumber     String?
+  role            Role      @default(USER)
+  bio             String?
+  firstname       String
+  lastname        String
+  bornday         DateTime?
+  organizationsId Json?
+}
+
+model Community {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  title     String
+  imageUrl  Json[]
+  subTitle  String?
+  published Boolean  @default(false)
+  authorId  String
+}
+
+model Organization {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  localisation String?
+  phoneNumber  String?
+  userId       String
+}
+
+model Captor {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  batteryLevel Int      @default(100)
+  createAt     DateTime @default(now())
+}
+
+model CaptorData {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  captorId     String
+  soilHumidity String   @default("0")
+  ambiantTemp  String   @default("0")
+  SizePlant    String   @default("0")
+  createAt     DateTime @default(now())
+  updateAt     DateTime @default(now())
+}
+
+enum Role {
+  USER
+  SUPERUSER
+  ADMIN
+}
